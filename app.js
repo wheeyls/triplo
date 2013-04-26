@@ -22,6 +22,8 @@ app.post('/', function (request, response) {
   } catch (err) {
     coords = { lat: 0, lon: 0 };
   }
+
+  response.send(JSON.stringify(coords));
 });
 
 var port = process.env.PORT || 5000;
