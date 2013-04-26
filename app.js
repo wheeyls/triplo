@@ -11,9 +11,17 @@ var allowCrossDomain = function(req, res, next) {
 
 app.use(express.logger());
 app.use(allowCrossDomain);
+app.use(express.bodyParser());
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
+app.use(express.static(__dirname + '/public'));
 
 app.get('/', function (request, response) {
-  response.send(JSON.stringify(coords));
+  response.render('index', { coords: coords });
+});
+
+app.get('/watch', function (request, response) {
+  response.render('watch', { coords: coords });
 });
 
 app.post('/', function (request, response) {
@@ -23,7 +31,7 @@ app.post('/', function (request, response) {
     coords = { lat: 0, lon: 0 };
   }
 
-  response.send(JSON.stringify(coords));
+  response.send(coords);
 });
 
 var port = process.env.PORT || 5000;
