@@ -18,8 +18,7 @@ app.get('/', function (request, response) {
 
 app.post('/', function (request, response) {
   try {
-    coords.lat = request.params.lat;
-    coords.lon = request.params.lon;
+    coords = request.body;
   } catch (err) {
     coords = { lat: 0, lon: 0 };
   }
