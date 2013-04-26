@@ -1,0 +1,76 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <p>Distance between Clybourn and Work:</p>
+    <p><span id='to-trav'></span> miles</p>
+    <p>Distance between me and work:</p>
+    <p><span id='to-work'></span> miles</p>
+    <p>Distance between me and clybourn:</p>
+    <p><span id='to-cly'></span> miles</p>
+    <p>Last updated:</p>
+    <p><span id='updated'></span></p>
+    <img id='map' />
+    <script>
+      var notifyOk = !!window.webkitNotifications;
+
+      if (notifyOk) {
+        window.webkitNotifications.requestPermission(function () {
+          setNotification('hi there');
+        }, function () {
+          console.log('ouch')
+        });
+      }
+
+      function setNotification(msg) {
+        var n;
+        if (!notifyOk) { return; }
+        if(window.webkitNotifications.checkPermission() == 0) {
+          n = window.webkitNotifications.createNotification('', 'Notify me', msg);
+          n.show();
+        }
+      }
+
+      function haversine(lat1, lon1, lat2, lon2) {
+        var R = 6371; // km
+        var dLat = (lat2-lat1)*Math.PI/180;
+        var dLon = (lon2-lon1)*Math.PI/180; 
+        var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2); 
+        var c = 2 * Math.asin(Math.sqrt(a)); 
+        var d = R * c;
+
+        return d * 0.621371; // to miles
+      }
+      var clyLat = 41.916944, clyLong = -87.668056;
+      var workLat = 45.523452, workLong = -122.676207;
+      var fullDistance = haversine(workLat, workLong, clyLat, clyLong);
+
+      function renderMap(meLat, meLong) {
+        document.getElementById('map').setAttribute('src',
+          "http://maps.google.com/maps/api/staticmap?size=450x300&sensor=false&markers=" + meLat + "%2C" + meLong + "|" + workLat + "%2C" + workLong + "|" + clyLat + "%2C" + clyLong
+        );
+      }
+
+      renderMap();
+      window.navigator.geolocation.watchPosition(function (pos) {
+        setNotification('updated');
+        var meLat = pos.coords.latitude,
+          meLong = pos.coords.longitude,
+          toWork = haversine(workLat, workLong, meLat, meLong),
+          toCly = haversine(clyLat, clyLong, meLat, meLong),
+          time = new Date();
+
+
+        renderMap(meLat, meLong);
+        document.getElementById('updated').innerHTML = time.toString();
+        document.getElementById('to-work').innerHTML = toWork;
+        document.getElementById('to-cly').innerHTML = toCly;
+        document.getElementById('to-trav').innerHTML = fullDistance;
+      }, function () {
+        console.log(arguments);
+      });
+    </script>
+  </body>
+</html>
