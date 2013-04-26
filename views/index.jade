@@ -1,4 +1,4 @@
 extends layout
 
 block content
-  img(src='http://maps.google.com/maps/api/staticmap?size=450x300&sensor=false&markers=41.878114%2C-87.629798|45.523452%2C-122.676207')
+  img(src='http://maps.google.com/maps/api/staticmap?size=450x300&sensor=false&markers=41.878114%2C-87.629798|45.523452%2C-122.676207|' + coords.lat + '%2C' + coords.lon)

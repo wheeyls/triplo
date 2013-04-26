@@ -4,7 +4,7 @@
       , lon = pos.coords.longitude
       ;
     $.post('http://triplo.herokuapp.com/',
-       { lat: lat, lon: lat },
+       { lat: lat, lon: lon },
        function (data) {
          $('#holder').html(JSON.stringify(data));
        });
