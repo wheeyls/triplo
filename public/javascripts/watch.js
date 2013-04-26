@@ -6,7 +6,7 @@
     $.post('http://triplo.herokuapp.com/',
        { lat: lat, lon: lon },
        function (data) {
-         $('#holder').html(JSON.stringify(data) + new Date());
+         $('#holder').append(JSON.stringify(data) + new Date());
        });
   });
 }());
